@@ -1,0 +1,58 @@
+type Course {
+  id: ID! @id
+  code: String! @unique
+  name: String!
+  semesters: [Semester!]!
+  degree: String!
+}
+
+type Semester {
+  id: ID! @id
+  semester: String! @unique
+  courses: [Course!]!
+}
+
+enum QuizType {
+  CHOICE,
+  ESSAY
+}
+
+enum Permission {
+  ADMIN,
+  TA,
+  STUDENT
+}
+
+type QuizContents {
+  id: ID! @id
+  type: QuizType!
+  options: [String!]! @scalarList(strategy: RELATION)
+}
+
+type Account {
+  id: ID! @id
+  user_id: String! @unique
+  user_pwd: String!
+  permission: Permission!
+  createdAt: DateTime! @createdAt
+}
+
+type Answer {
+  id: ID! @id
+  quiz: Quiz!
+  user: Account!
+  content: String!
+  createdAt: DateTime! @createdAt
+}
+
+type Quiz {
+  id: ID! @id
+  course: Course!
+  semester: Semester!
+  title: String!
+  description: String!
+  content: QuizContents!
+  answers: [Answer!]!
+  createdAt: DateTime! @createdAt
+  createdBy: Account!
+}

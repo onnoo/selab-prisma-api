@@ -1,0 +1,74 @@
+scalar DateTime
+
+type Query {
+  courses(degree: String, semester: String): [Course!]!
+  semesters: [Semester!]!
+  quizzes: [Quiz!]!
+  quiz(id: ID!): Quiz!
+}
+
+type Mutation {
+  addAnswer(quizId: ID!, userId: ID!, content: String!): Answer!
+}
+
+type Subscription {
+  newQuiz: Quiz
+  newAnswer(quizId: ID!): Answer
+}
+
+type Course {
+  code: String!
+  name: String!
+  semesters: [Semester!]!
+  degree: String!
+}
+
+type Semester {
+  semester: String!
+  courses: [Course!]!
+}
+
+enum QuizType {
+  CHOICE,
+  ESSAY
+}
+
+enum Permission {
+  ADMIN,
+  TA,
+  STUDENT
+}
+
+type QuizContents {
+  id: ID!
+  type: QuizType!
+  options: [String!]!
+}
+
+type Account {
+  id: ID!
+  user_id: String!
+  user_pwd: String!
+  permission: Permission!
+  createdAt: DateTime!
+}
+
+type Answer {
+  id: ID!
+  quiz: Quiz!
+  user: Account!
+  content: String!
+  createdAt: DateTime!
+}
+
+type Quiz {
+  id: ID!
+  course: Course!
+  semester: Semester!
+  title: String!
+  description: String!
+  content: QuizContents!
+  answers: [Answer!]!
+  createdAt: DateTime!
+  createdBy: Account!
+}
