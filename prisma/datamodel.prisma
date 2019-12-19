@@ -55,4 +55,5 @@ type Quiz {
   answers: [Answer!]!
   createdAt: DateTime! @createdAt
   createdBy: Account!
+  deadline: DateTime
 }

@@ -785,6 +785,7 @@ type Quiz {
   answers(where: AnswerWhereInput, orderBy: AnswerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Answer!]
   createdAt: DateTime!
   createdBy: Account!
+  deadline: DateTime
 }
 
 type QuizConnection {
@@ -924,6 +925,7 @@ input QuizCreateInput {
   content: QuizContentsCreateOneInput!
   answers: AnswerCreateManyWithoutQuizInput
   createdBy: AccountCreateOneInput!
+  deadline: DateTime
 }
 
 input QuizCreateOneWithoutAnswersInput {
@@ -939,6 +941,7 @@ input QuizCreateWithoutAnswersInput {
   description: String!
   content: QuizContentsCreateOneInput!
   createdBy: AccountCreateOneInput!
+  deadline: DateTime
 }
 
 type QuizEdge {
@@ -955,6 +958,8 @@ enum QuizOrderByInput {
   description_DESC
   createdAt_ASC
   createdAt_DESC
+  deadline_ASC
+  deadline_DESC
 }
 
 type QuizPreviousValues {
@@ -962,6 +967,7 @@ type QuizPreviousValues {
   title: String!
   description: String!
   createdAt: DateTime!
+  deadline: DateTime
 }
 
 type QuizSubscriptionPayload {
@@ -995,11 +1001,13 @@ input QuizUpdateInput {
   content: QuizContentsUpdateOneRequiredInput
   answers: AnswerUpdateManyWithoutQuizInput
   createdBy: AccountUpdateOneRequiredInput
+  deadline: DateTime
 }
 
 input QuizUpdateManyMutationInput {
   title: String
   description: String
+  deadline: DateTime
 }
 
 input QuizUpdateOneRequiredWithoutAnswersInput {
@@ -1016,6 +1024,7 @@ input QuizUpdateWithoutAnswersDataInput {
   description: String
   content: QuizContentsUpdateOneRequiredInput
   createdBy: AccountUpdateOneRequiredInput
+  deadline: DateTime
 }
 
 input QuizUpsertWithoutAnswersInput {
@@ -1081,6 +1090,14 @@ input QuizWhereInput {
   createdAt_gt: DateTime
   createdAt_gte: DateTime
   createdBy: AccountWhereInput
+  deadline: DateTime
+  deadline_not: DateTime
+  deadline_in: [DateTime!]
+  deadline_not_in: [DateTime!]
+  deadline_lt: DateTime
+  deadline_lte: DateTime
+  deadline_gt: DateTime
+  deadline_gte: DateTime
   AND: [QuizWhereInput!]
   OR: [QuizWhereInput!]
   NOT: [QuizWhereInput!]

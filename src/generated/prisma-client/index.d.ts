@@ -350,7 +350,9 @@ export type QuizOrderByInput =
   | "description_ASC"
   | "description_DESC"
   | "createdAt_ASC"
-  | "createdAt_DESC";
+  | "createdAt_DESC"
+  | "deadline_ASC"
+  | "deadline_DESC";
 
 export type QuizContentsOrderByInput =
   | "id_ASC"
@@ -633,6 +635,14 @@ export interface QuizWhereInput {
   createdAt_gt?: Maybe<DateTimeInput>;
   createdAt_gte?: Maybe<DateTimeInput>;
   createdBy?: Maybe<AccountWhereInput>;
+  deadline?: Maybe<DateTimeInput>;
+  deadline_not?: Maybe<DateTimeInput>;
+  deadline_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deadline_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deadline_lt?: Maybe<DateTimeInput>;
+  deadline_lte?: Maybe<DateTimeInput>;
+  deadline_gt?: Maybe<DateTimeInput>;
+  deadline_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<QuizWhereInput[] | QuizWhereInput>;
   OR?: Maybe<QuizWhereInput[] | QuizWhereInput>;
   NOT?: Maybe<QuizWhereInput[] | QuizWhereInput>;
@@ -719,6 +729,7 @@ export interface QuizCreateWithoutAnswersInput {
   description: String;
   content: QuizContentsCreateOneInput;
   createdBy: AccountCreateOneInput;
+  deadline?: Maybe<DateTimeInput>;
 }
 
 export interface CourseCreateOneInput {
@@ -811,6 +822,7 @@ export interface QuizUpdateWithoutAnswersDataInput {
   description?: Maybe<String>;
   content?: Maybe<QuizContentsUpdateOneRequiredInput>;
   createdBy?: Maybe<AccountUpdateOneRequiredInput>;
+  deadline?: Maybe<DateTimeInput>;
 }
 
 export interface CourseUpdateOneRequiredInput {
@@ -1113,6 +1125,7 @@ export interface QuizCreateInput {
   content: QuizContentsCreateOneInput;
   answers?: Maybe<AnswerCreateManyWithoutQuizInput>;
   createdBy: AccountCreateOneInput;
+  deadline?: Maybe<DateTimeInput>;
 }
 
 export interface AnswerCreateManyWithoutQuizInput {
@@ -1134,6 +1147,7 @@ export interface QuizUpdateInput {
   content?: Maybe<QuizContentsUpdateOneRequiredInput>;
   answers?: Maybe<AnswerUpdateManyWithoutQuizInput>;
   createdBy?: Maybe<AccountUpdateOneRequiredInput>;
+  deadline?: Maybe<DateTimeInput>;
 }
 
 export interface AnswerUpdateManyWithoutQuizInput {
@@ -1227,6 +1241,7 @@ export interface AnswerUpdateManyDataInput {
 export interface QuizUpdateManyMutationInput {
   title?: Maybe<String>;
   description?: Maybe<String>;
+  deadline?: Maybe<DateTimeInput>;
 }
 
 export interface QuizContentsUpdateInput {
@@ -1480,6 +1495,7 @@ export interface Quiz {
   title: String;
   description: String;
   createdAt: DateTimeOutput;
+  deadline?: DateTimeOutput;
 }
 
 export interface QuizPromise extends Promise<Quiz>, Fragmentable {
@@ -1500,6 +1516,7 @@ export interface QuizPromise extends Promise<Quiz>, Fragmentable {
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   createdBy: <T = AccountPromise>() => T;
+  deadline: () => Promise<DateTimeOutput>;
 }
 
 export interface QuizSubscription
@@ -1522,6 +1539,7 @@ export interface QuizSubscription
   }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   createdBy: <T = AccountSubscription>() => T;
+  deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface QuizNullablePromise
@@ -1544,6 +1562,7 @@ export interface QuizNullablePromise
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   createdBy: <T = AccountPromise>() => T;
+  deadline: () => Promise<DateTimeOutput>;
 }
 
 export interface Course {
@@ -2156,6 +2175,7 @@ export interface QuizPreviousValues {
   title: String;
   description: String;
   createdAt: DateTimeOutput;
+  deadline?: DateTimeOutput;
 }
 
 export interface QuizPreviousValuesPromise
@@ -2165,6 +2185,7 @@ export interface QuizPreviousValuesPromise
   title: () => Promise<String>;
   description: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
+  deadline: () => Promise<DateTimeOutput>;
 }
 
 export interface QuizPreviousValuesSubscription
@@ -2174,6 +2195,7 @@ export interface QuizPreviousValuesSubscription
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface QuizContentsSubscriptionPayload {
