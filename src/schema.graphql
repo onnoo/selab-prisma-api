@@ -8,7 +8,8 @@ type Query {
 }
 
 type Mutation {
-  addAnswer(quizId: ID!, userId: ID!, content: String!): Answer!
+  addAnswer(quizId: ID!, userId: String!, content: String!): Answer!
+  addQuiz(userId: String!, title: String!, description: String!, type: QuizType!, options: [String!]!): Quiz!
 }
 
 type Subscription {
@@ -56,7 +57,7 @@ type Account {
 type Answer {
   id: ID!
   quiz: Quiz!
-  user: Account!
+  user: String!
   content: String!
   createdAt: DateTime!
 }
@@ -70,5 +71,6 @@ type Quiz {
   content: QuizContents!
   answers: [Answer!]!
   createdAt: DateTime!
-  createdBy: Account!
+  createdBy: String!
+  deadline: DateTime
 }

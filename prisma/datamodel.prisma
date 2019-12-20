@@ -31,8 +31,7 @@ type QuizContents {
 
 type Account {
   id: ID! @id
-  user_id: String! @unique
-  user_pwd: String!
+  user_id: String!
   permission: Permission!
   createdAt: DateTime! @createdAt
 }
@@ -40,7 +39,7 @@ type Account {
 type Answer {
   id: ID! @id
   quiz: Quiz!
-  user: Account!
+  user: String!
   content: String!
   createdAt: DateTime! @createdAt
 }
@@ -54,6 +53,6 @@ type Quiz {
   content: QuizContents!
   answers: [Answer!]!
   createdAt: DateTime! @createdAt
-  createdBy: Account!
+  createdBy: String!
   deadline: DateTime
 }

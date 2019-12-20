@@ -6,7 +6,6 @@ module.exports = {
 /* GraphQL */ `type Account {
   id: ID!
   user_id: String!
-  user_pwd: String!
   permission: Permission!
   createdAt: DateTime!
 }
@@ -20,13 +19,7 @@ type AccountConnection {
 input AccountCreateInput {
   id: ID
   user_id: String!
-  user_pwd: String!
   permission: Permission!
-}
-
-input AccountCreateOneInput {
-  create: AccountCreateInput
-  connect: AccountWhereUniqueInput
 }
 
 type AccountEdge {
@@ -39,8 +32,6 @@ enum AccountOrderByInput {
   id_DESC
   user_id_ASC
   user_id_DESC
-  user_pwd_ASC
-  user_pwd_DESC
   permission_ASC
   permission_DESC
   createdAt_ASC
@@ -50,7 +41,6 @@ enum AccountOrderByInput {
 type AccountPreviousValues {
   id: ID!
   user_id: String!
-  user_pwd: String!
   permission: Permission!
   createdAt: DateTime!
 }
@@ -73,34 +63,14 @@ input AccountSubscriptionWhereInput {
   NOT: [AccountSubscriptionWhereInput!]
 }
 
-input AccountUpdateDataInput {
-  user_id: String
-  user_pwd: String
-  permission: Permission
-}
-
 input AccountUpdateInput {
   user_id: String
-  user_pwd: String
   permission: Permission
 }
 
 input AccountUpdateManyMutationInput {
   user_id: String
-  user_pwd: String
   permission: Permission
-}
-
-input AccountUpdateOneRequiredInput {
-  create: AccountCreateInput
-  update: AccountUpdateDataInput
-  upsert: AccountUpsertNestedInput
-  connect: AccountWhereUniqueInput
-}
-
-input AccountUpsertNestedInput {
-  update: AccountUpdateDataInput!
-  create: AccountCreateInput!
 }
 
 input AccountWhereInput {
@@ -132,20 +102,6 @@ input AccountWhereInput {
   user_id_not_starts_with: String
   user_id_ends_with: String
   user_id_not_ends_with: String
-  user_pwd: String
-  user_pwd_not: String
-  user_pwd_in: [String!]
-  user_pwd_not_in: [String!]
-  user_pwd_lt: String
-  user_pwd_lte: String
-  user_pwd_gt: String
-  user_pwd_gte: String
-  user_pwd_contains: String
-  user_pwd_not_contains: String
-  user_pwd_starts_with: String
-  user_pwd_not_starts_with: String
-  user_pwd_ends_with: String
-  user_pwd_not_ends_with: String
   permission: Permission
   permission_not: Permission
   permission_in: [Permission!]
@@ -165,7 +121,6 @@ input AccountWhereInput {
 
 input AccountWhereUniqueInput {
   id: ID
-  user_id: String
 }
 
 type AggregateAccount {
@@ -195,7 +150,7 @@ type AggregateSemester {
 type Answer {
   id: ID!
   quiz: Quiz!
-  user: Account!
+  user: String!
   content: String!
   createdAt: DateTime!
 }
@@ -209,7 +164,7 @@ type AnswerConnection {
 input AnswerCreateInput {
   id: ID
   quiz: QuizCreateOneWithoutAnswersInput!
-  user: AccountCreateOneInput!
+  user: String!
   content: String!
 }
 
@@ -220,7 +175,7 @@ input AnswerCreateManyWithoutQuizInput {
 
 input AnswerCreateWithoutQuizInput {
   id: ID
-  user: AccountCreateOneInput!
+  user: String!
   content: String!
 }
 
@@ -232,6 +187,8 @@ type AnswerEdge {
 enum AnswerOrderByInput {
   id_ASC
   id_DESC
+  user_ASC
+  user_DESC
   content_ASC
   content_DESC
   createdAt_ASC
@@ -240,6 +197,7 @@ enum AnswerOrderByInput {
 
 type AnswerPreviousValues {
   id: ID!
+  user: String!
   content: String!
   createdAt: DateTime!
 }
@@ -259,6 +217,20 @@ input AnswerScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  user: String
+  user_not: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_lt: String
+  user_lte: String
+  user_gt: String
+  user_gte: String
+  user_contains: String
+  user_not_contains: String
+  user_starts_with: String
+  user_not_starts_with: String
+  user_ends_with: String
+  user_not_ends_with: String
   content: String
   content_not: String
   content_in: [String!]
@@ -306,15 +278,17 @@ input AnswerSubscriptionWhereInput {
 
 input AnswerUpdateInput {
   quiz: QuizUpdateOneRequiredWithoutAnswersInput
-  user: AccountUpdateOneRequiredInput
+  user: String
   content: String
 }
 
 input AnswerUpdateManyDataInput {
+  user: String
   content: String
 }
 
 input AnswerUpdateManyMutationInput {
+  user: String
   content: String
 }
 
@@ -336,7 +310,7 @@ input AnswerUpdateManyWithWhereNestedInput {
 }
 
 input AnswerUpdateWithoutQuizDataInput {
-  user: AccountUpdateOneRequiredInput
+  user: String
   content: String
 }
 
@@ -367,7 +341,20 @@ input AnswerWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   quiz: QuizWhereInput
-  user: AccountWhereInput
+  user: String
+  user_not: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_lt: String
+  user_lte: String
+  user_gt: String
+  user_gte: String
+  user_contains: String
+  user_not_contains: String
+  user_starts_with: String
+  user_not_starts_with: String
+  user_ends_with: String
+  user_not_ends_with: String
   content: String
   content_not: String
   content_in: [String!]
@@ -784,7 +771,7 @@ type Quiz {
   content: QuizContents!
   answers(where: AnswerWhereInput, orderBy: AnswerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Answer!]
   createdAt: DateTime!
-  createdBy: Account!
+  createdBy: String!
   deadline: DateTime
 }
 
@@ -924,7 +911,7 @@ input QuizCreateInput {
   description: String!
   content: QuizContentsCreateOneInput!
   answers: AnswerCreateManyWithoutQuizInput
-  createdBy: AccountCreateOneInput!
+  createdBy: String!
   deadline: DateTime
 }
 
@@ -940,7 +927,7 @@ input QuizCreateWithoutAnswersInput {
   title: String!
   description: String!
   content: QuizContentsCreateOneInput!
-  createdBy: AccountCreateOneInput!
+  createdBy: String!
   deadline: DateTime
 }
 
@@ -958,6 +945,8 @@ enum QuizOrderByInput {
   description_DESC
   createdAt_ASC
   createdAt_DESC
+  createdBy_ASC
+  createdBy_DESC
   deadline_ASC
   deadline_DESC
 }
@@ -967,6 +956,7 @@ type QuizPreviousValues {
   title: String!
   description: String!
   createdAt: DateTime!
+  createdBy: String!
   deadline: DateTime
 }
 
@@ -1000,13 +990,14 @@ input QuizUpdateInput {
   description: String
   content: QuizContentsUpdateOneRequiredInput
   answers: AnswerUpdateManyWithoutQuizInput
-  createdBy: AccountUpdateOneRequiredInput
+  createdBy: String
   deadline: DateTime
 }
 
 input QuizUpdateManyMutationInput {
   title: String
   description: String
+  createdBy: String
   deadline: DateTime
 }
 
@@ -1023,7 +1014,7 @@ input QuizUpdateWithoutAnswersDataInput {
   title: String
   description: String
   content: QuizContentsUpdateOneRequiredInput
-  createdBy: AccountUpdateOneRequiredInput
+  createdBy: String
   deadline: DateTime
 }
 
@@ -1089,7 +1080,20 @@ input QuizWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
-  createdBy: AccountWhereInput
+  createdBy: String
+  createdBy_not: String
+  createdBy_in: [String!]
+  createdBy_not_in: [String!]
+  createdBy_lt: String
+  createdBy_lte: String
+  createdBy_gt: String
+  createdBy_gte: String
+  createdBy_contains: String
+  createdBy_not_contains: String
+  createdBy_starts_with: String
+  createdBy_not_starts_with: String
+  createdBy_ends_with: String
+  createdBy_not_ends_with: String
   deadline: DateTime
   deadline_not: DateTime
   deadline_in: [DateTime!]

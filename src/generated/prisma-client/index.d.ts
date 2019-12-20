@@ -309,8 +309,6 @@ export type AccountOrderByInput =
   | "id_DESC"
   | "user_id_ASC"
   | "user_id_DESC"
-  | "user_pwd_ASC"
-  | "user_pwd_DESC"
   | "permission_ASC"
   | "permission_DESC"
   | "createdAt_ASC"
@@ -337,6 +335,8 @@ export type QuizType = "CHOICE" | "ESSAY";
 export type AnswerOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "user_ASC"
+  | "user_DESC"
   | "content_ASC"
   | "content_DESC"
   | "createdAt_ASC"
@@ -351,6 +351,8 @@ export type QuizOrderByInput =
   | "description_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
+  | "createdBy_ASC"
+  | "createdBy_DESC"
   | "deadline_ASC"
   | "deadline_DESC";
 
@@ -364,7 +366,6 @@ export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export type AccountWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
-  user_id?: Maybe<String>;
 }>;
 
 export interface AccountWhereInput {
@@ -396,20 +397,6 @@ export interface AccountWhereInput {
   user_id_not_starts_with?: Maybe<String>;
   user_id_ends_with?: Maybe<String>;
   user_id_not_ends_with?: Maybe<String>;
-  user_pwd?: Maybe<String>;
-  user_pwd_not?: Maybe<String>;
-  user_pwd_in?: Maybe<String[] | String>;
-  user_pwd_not_in?: Maybe<String[] | String>;
-  user_pwd_lt?: Maybe<String>;
-  user_pwd_lte?: Maybe<String>;
-  user_pwd_gt?: Maybe<String>;
-  user_pwd_gte?: Maybe<String>;
-  user_pwd_contains?: Maybe<String>;
-  user_pwd_not_contains?: Maybe<String>;
-  user_pwd_starts_with?: Maybe<String>;
-  user_pwd_not_starts_with?: Maybe<String>;
-  user_pwd_ends_with?: Maybe<String>;
-  user_pwd_not_ends_with?: Maybe<String>;
   permission?: Maybe<Permission>;
   permission_not?: Maybe<Permission>;
   permission_in?: Maybe<Permission[] | Permission>;
@@ -549,7 +536,20 @@ export interface AnswerWhereInput {
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
   quiz?: Maybe<QuizWhereInput>;
-  user?: Maybe<AccountWhereInput>;
+  user?: Maybe<String>;
+  user_not?: Maybe<String>;
+  user_in?: Maybe<String[] | String>;
+  user_not_in?: Maybe<String[] | String>;
+  user_lt?: Maybe<String>;
+  user_lte?: Maybe<String>;
+  user_gt?: Maybe<String>;
+  user_gte?: Maybe<String>;
+  user_contains?: Maybe<String>;
+  user_not_contains?: Maybe<String>;
+  user_starts_with?: Maybe<String>;
+  user_not_starts_with?: Maybe<String>;
+  user_ends_with?: Maybe<String>;
+  user_not_ends_with?: Maybe<String>;
   content?: Maybe<String>;
   content_not?: Maybe<String>;
   content_in?: Maybe<String[] | String>;
@@ -634,7 +634,20 @@ export interface QuizWhereInput {
   createdAt_lte?: Maybe<DateTimeInput>;
   createdAt_gt?: Maybe<DateTimeInput>;
   createdAt_gte?: Maybe<DateTimeInput>;
-  createdBy?: Maybe<AccountWhereInput>;
+  createdBy?: Maybe<String>;
+  createdBy_not?: Maybe<String>;
+  createdBy_in?: Maybe<String[] | String>;
+  createdBy_not_in?: Maybe<String[] | String>;
+  createdBy_lt?: Maybe<String>;
+  createdBy_lte?: Maybe<String>;
+  createdBy_gt?: Maybe<String>;
+  createdBy_gte?: Maybe<String>;
+  createdBy_contains?: Maybe<String>;
+  createdBy_not_contains?: Maybe<String>;
+  createdBy_starts_with?: Maybe<String>;
+  createdBy_not_starts_with?: Maybe<String>;
+  createdBy_ends_with?: Maybe<String>;
+  createdBy_not_ends_with?: Maybe<String>;
   deadline?: Maybe<DateTimeInput>;
   deadline_not?: Maybe<DateTimeInput>;
   deadline_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -693,26 +706,23 @@ export type SemesterWhereUniqueInput = AtLeastOne<{
 export interface AccountCreateInput {
   id?: Maybe<ID_Input>;
   user_id: String;
-  user_pwd: String;
   permission: Permission;
 }
 
 export interface AccountUpdateInput {
   user_id?: Maybe<String>;
-  user_pwd?: Maybe<String>;
   permission?: Maybe<Permission>;
 }
 
 export interface AccountUpdateManyMutationInput {
   user_id?: Maybe<String>;
-  user_pwd?: Maybe<String>;
   permission?: Maybe<Permission>;
 }
 
 export interface AnswerCreateInput {
   id?: Maybe<ID_Input>;
   quiz: QuizCreateOneWithoutAnswersInput;
-  user: AccountCreateOneInput;
+  user: String;
   content: String;
 }
 
@@ -728,7 +738,7 @@ export interface QuizCreateWithoutAnswersInput {
   title: String;
   description: String;
   content: QuizContentsCreateOneInput;
-  createdBy: AccountCreateOneInput;
+  createdBy: String;
   deadline?: Maybe<DateTimeInput>;
 }
 
@@ -797,14 +807,9 @@ export interface QuizContentsCreateoptionsInput {
   set?: Maybe<String[] | String>;
 }
 
-export interface AccountCreateOneInput {
-  create?: Maybe<AccountCreateInput>;
-  connect?: Maybe<AccountWhereUniqueInput>;
-}
-
 export interface AnswerUpdateInput {
   quiz?: Maybe<QuizUpdateOneRequiredWithoutAnswersInput>;
-  user?: Maybe<AccountUpdateOneRequiredInput>;
+  user?: Maybe<String>;
   content?: Maybe<String>;
 }
 
@@ -821,7 +826,7 @@ export interface QuizUpdateWithoutAnswersDataInput {
   title?: Maybe<String>;
   description?: Maybe<String>;
   content?: Maybe<QuizContentsUpdateOneRequiredInput>;
-  createdBy?: Maybe<AccountUpdateOneRequiredInput>;
+  createdBy?: Maybe<String>;
   deadline?: Maybe<DateTimeInput>;
 }
 
@@ -1076,30 +1081,13 @@ export interface QuizContentsUpsertNestedInput {
   create: QuizContentsCreateInput;
 }
 
-export interface AccountUpdateOneRequiredInput {
-  create?: Maybe<AccountCreateInput>;
-  update?: Maybe<AccountUpdateDataInput>;
-  upsert?: Maybe<AccountUpsertNestedInput>;
-  connect?: Maybe<AccountWhereUniqueInput>;
-}
-
-export interface AccountUpdateDataInput {
-  user_id?: Maybe<String>;
-  user_pwd?: Maybe<String>;
-  permission?: Maybe<Permission>;
-}
-
-export interface AccountUpsertNestedInput {
-  update: AccountUpdateDataInput;
-  create: AccountCreateInput;
-}
-
 export interface QuizUpsertWithoutAnswersInput {
   update: QuizUpdateWithoutAnswersDataInput;
   create: QuizCreateWithoutAnswersInput;
 }
 
 export interface AnswerUpdateManyMutationInput {
+  user?: Maybe<String>;
   content?: Maybe<String>;
 }
 
@@ -1124,7 +1112,7 @@ export interface QuizCreateInput {
   description: String;
   content: QuizContentsCreateOneInput;
   answers?: Maybe<AnswerCreateManyWithoutQuizInput>;
-  createdBy: AccountCreateOneInput;
+  createdBy: String;
   deadline?: Maybe<DateTimeInput>;
 }
 
@@ -1135,7 +1123,7 @@ export interface AnswerCreateManyWithoutQuizInput {
 
 export interface AnswerCreateWithoutQuizInput {
   id?: Maybe<ID_Input>;
-  user: AccountCreateOneInput;
+  user: String;
   content: String;
 }
 
@@ -1146,7 +1134,7 @@ export interface QuizUpdateInput {
   description?: Maybe<String>;
   content?: Maybe<QuizContentsUpdateOneRequiredInput>;
   answers?: Maybe<AnswerUpdateManyWithoutQuizInput>;
-  createdBy?: Maybe<AccountUpdateOneRequiredInput>;
+  createdBy?: Maybe<String>;
   deadline?: Maybe<DateTimeInput>;
 }
 
@@ -1177,7 +1165,7 @@ export interface AnswerUpdateWithWhereUniqueWithoutQuizInput {
 }
 
 export interface AnswerUpdateWithoutQuizDataInput {
-  user?: Maybe<AccountUpdateOneRequiredInput>;
+  user?: Maybe<String>;
   content?: Maybe<String>;
 }
 
@@ -1202,6 +1190,20 @@ export interface AnswerScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
+  user?: Maybe<String>;
+  user_not?: Maybe<String>;
+  user_in?: Maybe<String[] | String>;
+  user_not_in?: Maybe<String[] | String>;
+  user_lt?: Maybe<String>;
+  user_lte?: Maybe<String>;
+  user_gt?: Maybe<String>;
+  user_gte?: Maybe<String>;
+  user_contains?: Maybe<String>;
+  user_not_contains?: Maybe<String>;
+  user_starts_with?: Maybe<String>;
+  user_not_starts_with?: Maybe<String>;
+  user_ends_with?: Maybe<String>;
+  user_not_ends_with?: Maybe<String>;
   content?: Maybe<String>;
   content_not?: Maybe<String>;
   content_in?: Maybe<String[] | String>;
@@ -1235,12 +1237,14 @@ export interface AnswerUpdateManyWithWhereNestedInput {
 }
 
 export interface AnswerUpdateManyDataInput {
+  user?: Maybe<String>;
   content?: Maybe<String>;
 }
 
 export interface QuizUpdateManyMutationInput {
   title?: Maybe<String>;
   description?: Maybe<String>;
+  createdBy?: Maybe<String>;
   deadline?: Maybe<DateTimeInput>;
 }
 
@@ -1346,7 +1350,6 @@ export interface NodeNode {
 export interface Account {
   id: ID_Output;
   user_id: String;
-  user_pwd: String;
   permission: Permission;
   createdAt: DateTimeOutput;
 }
@@ -1354,7 +1357,6 @@ export interface Account {
 export interface AccountPromise extends Promise<Account>, Fragmentable {
   id: () => Promise<ID_Output>;
   user_id: () => Promise<String>;
-  user_pwd: () => Promise<String>;
   permission: () => Promise<Permission>;
   createdAt: () => Promise<DateTimeOutput>;
 }
@@ -1364,7 +1366,6 @@ export interface AccountSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   user_id: () => Promise<AsyncIterator<String>>;
-  user_pwd: () => Promise<AsyncIterator<String>>;
   permission: () => Promise<AsyncIterator<Permission>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -1374,7 +1375,6 @@ export interface AccountNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   user_id: () => Promise<String>;
-  user_pwd: () => Promise<String>;
   permission: () => Promise<Permission>;
   createdAt: () => Promise<DateTimeOutput>;
 }
@@ -1458,6 +1458,7 @@ export interface AggregateAccountSubscription
 
 export interface Answer {
   id: ID_Output;
+  user: String;
   content: String;
   createdAt: DateTimeOutput;
 }
@@ -1465,7 +1466,7 @@ export interface Answer {
 export interface AnswerPromise extends Promise<Answer>, Fragmentable {
   id: () => Promise<ID_Output>;
   quiz: <T = QuizPromise>() => T;
-  user: <T = AccountPromise>() => T;
+  user: () => Promise<String>;
   content: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
 }
@@ -1475,7 +1476,7 @@ export interface AnswerSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   quiz: <T = QuizSubscription>() => T;
-  user: <T = AccountSubscription>() => T;
+  user: () => Promise<AsyncIterator<String>>;
   content: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -1485,7 +1486,7 @@ export interface AnswerNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   quiz: <T = QuizPromise>() => T;
-  user: <T = AccountPromise>() => T;
+  user: () => Promise<String>;
   content: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
 }
@@ -1495,6 +1496,7 @@ export interface Quiz {
   title: String;
   description: String;
   createdAt: DateTimeOutput;
+  createdBy: String;
   deadline?: DateTimeOutput;
 }
 
@@ -1515,7 +1517,7 @@ export interface QuizPromise extends Promise<Quiz>, Fragmentable {
     last?: Int;
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
-  createdBy: <T = AccountPromise>() => T;
+  createdBy: () => Promise<String>;
   deadline: () => Promise<DateTimeOutput>;
 }
 
@@ -1538,7 +1540,7 @@ export interface QuizSubscription
     last?: Int;
   }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  createdBy: <T = AccountSubscription>() => T;
+  createdBy: () => Promise<AsyncIterator<String>>;
   deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
@@ -1561,7 +1563,7 @@ export interface QuizNullablePromise
     last?: Int;
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
-  createdBy: <T = AccountPromise>() => T;
+  createdBy: () => Promise<String>;
   deadline: () => Promise<DateTimeOutput>;
 }
 
@@ -2023,7 +2025,6 @@ export interface AccountSubscriptionPayloadSubscription
 export interface AccountPreviousValues {
   id: ID_Output;
   user_id: String;
-  user_pwd: String;
   permission: Permission;
   createdAt: DateTimeOutput;
 }
@@ -2033,7 +2034,6 @@ export interface AccountPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   user_id: () => Promise<String>;
-  user_pwd: () => Promise<String>;
   permission: () => Promise<Permission>;
   createdAt: () => Promise<DateTimeOutput>;
 }
@@ -2043,7 +2043,6 @@ export interface AccountPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   user_id: () => Promise<AsyncIterator<String>>;
-  user_pwd: () => Promise<AsyncIterator<String>>;
   permission: () => Promise<AsyncIterator<Permission>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -2075,6 +2074,7 @@ export interface AnswerSubscriptionPayloadSubscription
 
 export interface AnswerPreviousValues {
   id: ID_Output;
+  user: String;
   content: String;
   createdAt: DateTimeOutput;
 }
@@ -2083,6 +2083,7 @@ export interface AnswerPreviousValuesPromise
   extends Promise<AnswerPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  user: () => Promise<String>;
   content: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
 }
@@ -2091,6 +2092,7 @@ export interface AnswerPreviousValuesSubscription
   extends Promise<AsyncIterator<AnswerPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  user: () => Promise<AsyncIterator<String>>;
   content: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -2175,6 +2177,7 @@ export interface QuizPreviousValues {
   title: String;
   description: String;
   createdAt: DateTimeOutput;
+  createdBy: String;
   deadline?: DateTimeOutput;
 }
 
@@ -2185,6 +2188,7 @@ export interface QuizPreviousValuesPromise
   title: () => Promise<String>;
   description: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
+  createdBy: () => Promise<String>;
   deadline: () => Promise<DateTimeOutput>;
 }
 
@@ -2195,6 +2199,7 @@ export interface QuizPreviousValuesSubscription
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  createdBy: () => Promise<AsyncIterator<String>>;
   deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
